@@ -19,15 +19,12 @@ function applyRules(text, rules) {
   return result.trim().replace(/\s+/g, " "); // clean up extra spaces
 }
 
-function injectIntoEditor(newText) {
-  const editor = document.querySelector('[contenteditable="true"]');
+function injectIntoEditor(editor, newText) {
+  //const editor = document.querySelector('[contenteditable="true"]');
   if (!editor) return;
-
   editor.focus();
-
   // Replace content safely
   editor.innerText = newText;
-
   // Trigger input event (important for React)
   editor.dispatchEvent(new InputEvent("input", { bubbles: true }));
 }
@@ -59,7 +56,7 @@ document.addEventListener("keydown", async (e) => {
     chrome.storage.sync.get("rules", (data) => {
       const userRules = data.rules || DEFAULT_RULES;
       const optimized = applyRules(original, userRules);
-      injectIntoEditor(optimized);
+      injectIntoEditor(editor, optimized);
       console.log(`Optimized: "${original}" → "${optimized}"`);
     });
   }
